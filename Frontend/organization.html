@@ -1,0 +1,963 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Organization</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Cabinet+Grotesk:wght@400;500;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/axios@1.13.2/dist/axios.min.js"></script>
+
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --bg: #f5f3ef;
+        --surface: #ffffff;
+        --surface2: #f0ede8;
+        --border: #e2ddd6;
+        --ink: #1a1714;
+        --ink2: #4a4540;
+        --muted: #9c958d;
+        --accent: #e8622a;
+        --accent-lt: #fff0ea;
+        --green: #2a9d5c;
+        --green-lt: #e8f7ef;
+        --red: #d94040;
+        --shadow: rgba(26, 23, 20, 0.08);
+      }
+
+      html,
+      body {
+        min-height: 100%;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: "Plus Jakarta Sans", sans-serif;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+      }
+
+      .page {
+        position: relative;
+        z-index: 1;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* NAV */
+      nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 40px;
+        background: var(--surface);
+        border-bottom: 1.5px solid var(--border);
+        position: sticky;
+        top: 0;
+        z-index: 20;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: "Cabinet Grotesk", sans-serif;
+        font-weight: 900;
+        font-size: 1.2rem;
+        letter-spacing: -0.4px;
+        color: var(--ink);
+        text-decoration: none;
+      }
+
+      .logo-mark {
+        width: 30px;
+        height: 30px;
+        border-radius: 8px;
+        background: var(--ink);
+        color: var(--bg);
+        display: grid;
+        place-items: center;
+        font-size: 13px;
+        font-weight: 900;
+      }
+
+      .nav-right {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .user-pill {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--surface2);
+        border: 1.5px solid var(--border);
+        border-radius: 40px;
+        padding: 5px 14px 5px 6px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: var(--ink2);
+        opacity: 0;
+        transform: translateX(6px);
+        transition:
+          opacity 0.4s,
+          transform 0.4s;
+      }
+      .user-pill.show {
+        opacity: 1;
+        transform: translateX(0);
+      }
+
+      .pill-av {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: var(--accent);
+        color: #fff;
+        display: grid;
+        place-items: center;
+        font-size: 0.65rem;
+        font-weight: 800;
+        flex-shrink: 0;
+      }
+
+      .steps {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .sdot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--border);
+        transition: all 0.3s;
+      }
+      .sdot.done {
+        background: var(--green);
+      }
+      .sdot.active {
+        background: var(--accent);
+        width: 18px;
+        border-radius: 4px;
+      }
+
+      /* LAYOUT */
+      main {
+        flex: 1;
+        display: grid;
+        grid-template-columns: 260px 1fr;
+        max-width: 900px;
+        width: 100%;
+        margin: 0 auto;
+        padding: 52px 24px 64px;
+        gap: 48px;
+        align-items: start;
+      }
+
+      /* SIDEBAR */
+      .sidebar {
+        animation: rise 0.55s ease both;
+      }
+
+      @keyframes rise {
+        from {
+          opacity: 0;
+          transform: translateY(18px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .greet-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 1.8px;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 14px;
+      }
+      .greet-tag::before {
+        content: "";
+        display: block;
+        width: 16px;
+        height: 2px;
+        background: var(--accent);
+        border-radius: 2px;
+      }
+
+      .greet-name {
+        font-family: "Cabinet Grotesk", sans-serif;
+        font-weight: 800;
+        font-size: 1.75rem;
+        line-height: 1.2;
+        letter-spacing: -0.6px;
+        color: var(--ink);
+        margin-bottom: 10px;
+      }
+
+      .greet-name .uname {
+        color: var(--accent);
+        position: relative;
+        display: inline-block;
+      }
+      .greet-name .uname::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 1px;
+        height: 3px;
+        background: var(--accent);
+        opacity: 0.25;
+        border-radius: 2px;
+      }
+
+      .greet-sub {
+        font-size: 0.85rem;
+        color: var(--muted);
+        line-height: 1.65;
+        margin-bottom: 28px;
+      }
+
+      .step-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .step-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 11px;
+      }
+
+      .step-num {
+        width: 24px;
+        height: 24px;
+        border-radius: 7px;
+        border: 1.5px solid var(--border);
+        background: var(--surface);
+        display: grid;
+        place-items: center;
+        font-size: 0.68rem;
+        font-weight: 800;
+        color: var(--muted);
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+      .step-item.active .step-num {
+        background: var(--accent-lt);
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+      .step-item.done .step-num {
+        background: var(--green-lt);
+        border-color: var(--green);
+        color: var(--green);
+      }
+
+      .step-txt strong {
+        display: block;
+        font-size: 0.82rem;
+        font-weight: 700;
+        color: var(--ink);
+        margin-bottom: 1px;
+      }
+      .step-txt span {
+        font-size: 0.76rem;
+        color: var(--muted);
+      }
+
+      /* CARD */
+      .card-wrap {
+        animation: rise 0.55s 0.08s ease both;
+      }
+
+      .card {
+        background: var(--surface);
+        border: 1.5px solid var(--border);
+        border-radius: 18px;
+        position: relative;
+        overflow: hidden;
+        box-shadow:
+          0 4px 28px var(--shadow),
+          0 1px 0 rgba(255, 255, 255, 0.8) inset;
+      }
+
+      .card-top {
+        padding: 24px 26px 20px;
+        border-bottom: 1.5px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+      }
+
+      .card-top h2 {
+        font-family: "Cabinet Grotesk", sans-serif;
+        font-weight: 800;
+        font-size: 1.2rem;
+        letter-spacing: -0.3px;
+        color: var(--ink);
+      }
+      .card-top p {
+        font-size: 0.78rem;
+        color: var(--muted);
+        margin-top: 2px;
+      }
+
+      .org-av {
+        width: 50px;
+        height: 50px;
+        border-radius: 13px;
+        background: var(--accent);
+        color: #fff;
+        display: grid;
+        place-items: center;
+        font-family: "Cabinet Grotesk", sans-serif;
+        font-weight: 900;
+        font-size: 1.35rem;
+        flex-shrink: 0;
+        transition:
+          background 0.3s,
+          box-shadow 0.3s;
+        box-shadow: 0 4px 14px rgba(232, 98, 42, 0.32);
+      }
+
+      .card-body {
+        padding: 24px 26px;
+      }
+
+      /* FIELDS */
+      .field {
+        margin-bottom: 18px;
+      }
+
+      .field > label {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 0.78rem;
+        font-weight: 700;
+        color: var(--ink2);
+        margin-bottom: 7px;
+        letter-spacing: 0.1px;
+      }
+      .field > label .opt {
+        font-size: 0.7rem;
+        font-weight: 500;
+        color: var(--muted);
+      }
+
+      .ibox {
+        position: relative;
+      }
+
+      .ibox svg,
+      .tbox svg {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 15px;
+        height: 15px;
+        color: var(--muted);
+        pointer-events: none;
+        transition: color 0.2s;
+      }
+      .tbox svg {
+        top: 13px;
+        transform: none;
+      }
+
+      input[type="text"],
+      textarea {
+        width: 100%;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-size: 0.88rem;
+        color: var(--ink);
+        background: var(--surface2);
+        border: 1.5px solid var(--border);
+        border-radius: 10px;
+        outline: none;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s,
+          background 0.2s;
+      }
+      input[type="text"] {
+        padding: 10px 12px 10px 36px;
+        height: 44px;
+      }
+      textarea {
+        padding: 10px 12px 10px 36px;
+        height: 96px;
+        resize: none;
+        line-height: 1.55;
+      }
+
+      input[type="text"]:focus,
+      textarea:focus {
+        border-color: var(--accent);
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(232, 98, 42, 0.11);
+      }
+      .ibox:focus-within svg,
+      .tbox:focus-within svg {
+        color: var(--accent);
+      }
+
+      input::placeholder,
+      textarea::placeholder {
+        color: var(--muted);
+        font-weight: 400;
+      }
+
+      .slug-row {
+        display: flex;
+        align-items: center;
+        background: var(--surface2);
+        border: 1.5px solid var(--border);
+        border-radius: 9px;
+        padding: 8px 12px;
+        margin-top: 7px;
+        font-size: 0.78rem;
+        gap: 1px;
+      }
+      .slug-row .dom {
+        color: var(--muted);
+      }
+      .slug-row .sv {
+        color: var(--accent);
+        font-weight: 700;
+      }
+
+      .ff {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-top: 5px;
+        min-height: 16px;
+      }
+      .ferr {
+        font-size: 0.72rem;
+        color: var(--red);
+        display: none;
+      }
+      .fhint {
+        font-size: 0.72rem;
+        color: var(--muted);
+      }
+      .fcc {
+        font-size: 0.72rem;
+        color: var(--muted);
+        margin-left: auto;
+      }
+      .fcc.warn {
+        color: var(--red);
+      }
+
+      .field.err input,
+      .field.err textarea {
+        border-color: var(--red);
+        box-shadow: 0 0 0 3px rgba(217, 64, 64, 0.09);
+      }
+      .field.err .ferr {
+        display: block;
+      }
+
+      hr {
+        border: none;
+        border-top: 1.5px solid var(--border);
+        margin: 20px 0;
+      }
+
+      /* BUTTONS */
+      .actions {
+        display: flex;
+        gap: 10px;
+      }
+
+      .btn-back {
+        height: 44px;
+        padding: 0 18px;
+        border-radius: 10px;
+        border: 1.5px solid var(--border);
+        background: transparent;
+        color: var(--ink2);
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.18s;
+      }
+      .btn-back:hover {
+        border-color: var(--ink2);
+        background: var(--surface2);
+      }
+
+      .btn-go {
+        flex: 1;
+        height: 44px;
+        border-radius: 10px;
+        border: none;
+        background: var(--ink);
+        color: #fff;
+        font-family: "Cabinet Grotesk", sans-serif;
+        font-size: 0.92rem;
+        font-weight: 800;
+        letter-spacing: -0.1px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition:
+          background 0.18s,
+          transform 0.14s,
+          box-shadow 0.18s;
+        box-shadow: 0 2px 10px rgba(26, 23, 20, 0.18);
+      }
+      .btn-go::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          to bottom,
+          rgba(255, 255, 255, 0.07),
+          transparent
+        );
+      }
+      .btn-go:hover {
+        background: #2d2825;
+        transform: translateY(-1px);
+        box-shadow: 0 5px 18px rgba(26, 23, 20, 0.22);
+      }
+      .btn-go:active {
+        transform: translateY(0);
+      }
+      .btn-go .lbl {
+        position: relative;
+        z-index: 1;
+        transition: opacity 0.2s;
+      }
+      .btn-go .spin {
+        position: absolute;
+        width: 17px;
+        height: 17px;
+        border: 2px solid rgba(255, 255, 255, 0.25);
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: spin 0.65s linear infinite;
+        display: none;
+      }
+      .btn-go.loading .lbl {
+        opacity: 0;
+      }
+      .btn-go.loading .spin {
+        display: block;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* SUCCESS */
+      .success-over {
+        position: absolute;
+        inset: 0;
+        background: var(--surface);
+        border-radius: 18px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.35s;
+        z-index: 10;
+      }
+      .success-over.show {
+        opacity: 1;
+        pointer-events: all;
+      }
+      .sring {
+        width: 54px;
+        height: 54px;
+        border-radius: 50%;
+        border: 2px solid var(--green);
+        background: var(--green-lt);
+        display: grid;
+        place-items: center;
+        animation: pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+      }
+      @keyframes pop {
+        from {
+          transform: scale(0.5);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+      .sring svg {
+        color: var(--green);
+        width: 24px;
+        height: 24px;
+      }
+      .success-over h3 {
+        font-family: "Cabinet Grotesk", sans-serif;
+        font-weight: 800;
+        font-size: 1.1rem;
+        color: var(--ink);
+      }
+      .success-over p {
+        font-size: 0.8rem;
+        color: var(--muted);
+      }
+
+      footer {
+        text-align: center;
+        padding: 18px;
+        font-size: 0.73rem;
+        color: var(--muted);
+        border-top: 1.5px solid var(--border);
+        background: var(--surface);
+        position: relative;
+        z-index: 1;
+      }
+
+      @media (max-width: 680px) {
+        main {
+          grid-template-columns: 1fr;
+          padding: 28px 16px 48px;
+          gap: 28px;
+        }
+        nav {
+          padding: 14px 18px;
+        }
+        .card-top,
+        .card-body {
+          padding: 18px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <nav>
+        <a href="#" class="logo">
+          <div class="logo-mark">T</div>
+          Taskflow
+        </a>
+        <div class="nav-right">
+          <div class="user-pill" id="userPill">
+            <div class="pill-av" id="pillAv">?</div>
+            <span id="pillName">Loading…</span>
+          </div>
+          <div class="steps">
+            <div class="sdot done"></div>
+            <div class="sdot active"></div>
+            <div class="sdot"></div>
+          </div>
+        </div>
+      </nav>
+
+      <main>
+        <!-- Sidebar -->
+        <aside class="sidebar">
+          <div class="greet-tag">Step 2 of 3</div>
+          <div class="greet-name">
+            Hey, <span class="uname" id="greetName">there</span> 👋
+          </div>
+          <p class="greet-sub">
+            Set up your organization. This is where your boards, teams &amp;
+            projects will live.
+          </p>
+
+          <div class="step-list">
+            <div class="step-item done">
+              <div class="step-num">✓</div>
+              <div class="step-txt">
+                <strong>Sign Up</strong>
+                <span>Account created</span>
+              </div>
+            </div>
+            <div class="step-item active">
+              <div class="step-num">2</div>
+              <div class="step-txt">
+                <strong>Create Organization</strong>
+                <span>Name your workspace</span>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">3</div>
+              <div class="step-txt">
+                <strong>Invite Team</strong>
+                <span>Add teammates</span>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Card -->
+        <div class="card-wrap">
+          <div class="card">
+            <div class="card-top">
+              <div>
+                <h2>New Organization</h2>
+                <p>Fill in the details to get started</p>
+              </div>
+              <div class="org-av" id="orgAv">A</div>
+            </div>
+
+            <div class="card-body">
+              <!-- Name field -->
+              <div class="field" id="nf">
+                <label for="orgName">
+                  Organization Name
+                  <span style="color: var(--accent)">*</span>
+                </label>
+                <div class="ibox">
+                  <svg
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M3 21h18M9 21V7l6-4v18M9 9h6m-6 4h6m-6 4h6"
+                    />
+                  </svg>
+                  <input
+                    type="text"
+                    id="orgName"
+                    name="name"
+                    placeholder="e.g. Acme Corp, My Studio"
+                    maxlength="60"
+                    autocomplete="off"
+                    autofocus
+                  />
+                </div>
+                <div class="slug-row">
+                  <span class="dom">taskflow.app/</span>
+                  <span class="sv" id="sv">your-org</span>
+                </div>
+                <div class="ff">
+                  <span class="ferr" id="nerr"
+                    >Organization name is required.</span
+                  >
+                  <span class="fcc" id="nc" style="margin-left: auto"
+                    >0 / 60</span
+                  >
+                </div>
+              </div>
+
+              <!-- Description field -->
+              <div class="field">
+                <label for="orgDesc">
+                  Description <span class="opt">(optional)</span>
+                </label>
+                <div class="ibox tbox">
+                  <svg
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M4 6h16M4 12h10M4 18h7"
+                    />
+                  </svg>
+                  <textarea
+                    id="orgDesc"
+                    name="description"
+                    placeholder="What does your organization do?"
+                    maxlength="200"
+                  ></textarea>
+                </div>
+                <div class="ff">
+                  <span class="fhint"
+                    >Help teammates understand this workspace.</span
+                  >
+                  <span class="fcc" id="dc">0 / 200</span>
+                </div>
+              </div>
+
+              <hr />
+
+              <div class="actions">
+                <button type="button" class="btn-back" onclick="history.back()">
+                  ← Back
+                </button>
+                <button class="btn-go" id="sb" onclick="cretaeoganization()">
+                  <span class="lbl">Create Organization →</span>
+                  <div class="spin"></div>
+                </button>
+              </div>
+            </div>
+
+            <div class="success-over" id="so">
+              <div class="sring">
+                <svg
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+              </div>
+              <h3>Organization Created!</h3>
+              <p id="smsg">Redirecting to your dashboard…</p>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <footer>© 2025 Taskflow &nbsp;·&nbsp; All rights reserved</footer>
+    </div>
+
+    <script>
+      const COLORS = [
+        "#e8622a",
+        "#2a9d5c",
+        "#3b82f6",
+        "#8b5cf6",
+        "#ef4444",
+        "#f59e0b",
+        "#06b6d4",
+        "#ec4899",
+      ];
+
+      function pickColor(s) {
+        if (!s) return COLORS[0];
+        let h = 0;
+        for (let i = 0; i < s.length; i++) h = s.charCodeAt(i) + ((h << 5) - h);
+        return COLORS[Math.abs(h) % COLORS.length];
+      }
+
+      function slug(v) {
+        return (
+          v
+            .trim()
+            .toLowerCase()
+            .replace(/[^a-z0-9\s-]/g, "")
+            .replace(/\s+/g, "-")
+            .replace(/-+/g, "-")
+            .slice(0, 40) || "your-org"
+        );
+      }
+
+      // DOM
+      const nameIn = document.getElementById("orgName");
+      const descIn = document.getElementById("orgDesc");
+      const nc = document.getElementById("nc");
+      const dc = document.getElementById("dc");
+      const sv = document.getElementById("sv");
+      const orgAv = document.getElementById("orgAv");
+      const nf = document.getElementById("nf");
+      const nerr = document.getElementById("nerr");
+      const sb = document.getElementById("sb");
+      const so = document.getElementById("so");
+      const smsg = document.getElementById("smsg");
+      const greetName = document.getElementById("greetName");
+      const pillAv = document.getElementById("pillAv");
+      const pillName = document.getElementById("pillName");
+      const userPill = document.getElementById("userPill");
+
+      // Live updates
+
+      async function cretaeoganization() {
+        const token = localStorage.getItem("username");
+        const organization_name = document.getElementById("orgName").value;
+        const description = document.getElementById("orgDesc").value;
+
+        const response = await axios.post("/add-create-create-org", {
+          orgname: organization_name,
+          description: description,
+          token: token,
+        });
+
+        if (response.status == 401) {
+          window.location.href = "/signup";
+          return;
+        } else {
+          
+        }
+      }
+
+      // Load username
+
+      async function loadUser() {
+        const token = localStorage.getItem("username");
+        try {
+          const res = await fetch(
+            "http://localhost:4000/get-orgization-username",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json", token: token },
+            },
+          );
+
+          if (res.status === 401) {
+            window.location.href = "/signup";
+            return;
+          }
+
+          const data = await res.json();
+          const uname = data.username || "User";
+
+          greetName.textContent = uname;
+
+          // Nav pill
+          const col = pickColor(uname.toLowerCase());
+          pillAv.textContent = uname.charAt(0).toUpperCase();
+          pillAv.style.background = col;
+          pillName.textContent = uname;
+          userPill.classList.add("show");
+        } catch (e) {
+          console.error(e);
+          greetName.textContent = "there";
+        }
+      }
+
+      loadUser();
+    </script>
+  </body>
+</html>
