@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Trillo – Your Travel Companion</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- ═══ SIDEBAR ═══ -->
+    <nav class="sidebar">
+      <div class="logo">
+        <img src="https://i.ibb.co/KxkmXpZ/logo.png" alt="Trillo Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'"/>
+        <span class="logo-text" style="display:none">trillo</span>
+      </div>
+
+      <ul class="nav-list">
+        <li class="nav-item nav-item--active">
+          <i class="fa-solid fa-hotel nav-icon"></i>
+          <span>Hotel</span>
+        </li>
+        <li class="nav-item">
+          <i class="fa-solid fa-plane nav-icon"></i>
+          <span>Flight</span>
+        </li>
+        <li class="nav-item">
+          <i class="fa-solid fa-car nav-icon"></i>
+          <span>Car Rental</span>
+        </li>
+        <li class="nav-item">
+          <i class="fa-solid fa-map-location-dot nav-icon"></i>
+          <span>Tours</span>
+        </li>
+      </ul>
+
+      <div class="sidebar-legal">
+        <p>© 2024 by Trillo. All rights reserved.</p>
+      </div>
+    </nav>
+
+    <!-- ═══ MAIN CONTENT ═══ -->
+    <main class="content">
+
+      <!-- Header -->
+      <header class="header">
+        <div class="search">
+          <input type="text" class="search__input" placeholder="Search hotels..." />
+          <button class="search__btn">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </button>
+        </div>
+
+        <nav class="user-nav">
+          <div class="user-nav__icon-box">
+            <i class="fa-regular fa-bookmark user-nav__icon"></i>
+            <span class="user-nav__notification">13</span>
+          </div>
+          <div class="user-nav__icon-box">
+            <i class="fa-regular fa-bell user-nav__icon"></i>
+            <span class="user-nav__notification">7</span>
+          </div>
+          <div class="user-nav__user">
+            <img src="https://i.pravatar.cc/40?img=47" alt="User" class="user-nav__user-photo"/>
+            <span class="user-nav__user-name">Jonas S.</span>
+          </div>
+        </nav>
+      </header>
+
+      <!-- Hotel View -->
+      <div class="hotel-view">
+
+        <!-- Gallery -->
+        <div class="gallery">
+          <figure class="gallery__item gallery__item--1">
+            <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800&q=80" alt="Hotel Photo 1" class="gallery__photo"/>
+          </figure>
+          <figure class="gallery__item gallery__item--2">
+            <img src="https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=800&q=80" alt="Hotel Photo 2" class="gallery__photo"/>
+          </figure>
+          <figure class="gallery__item gallery__item--3">
+            <img src="https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=800&q=80" alt="Hotel Photo 3" class="gallery__photo"/>
+          </figure>
+        </div>
+
+        <!-- Overview -->
+        <div class="overview">
+          <h1 class="overview__heading">Boutique Hotel Schönbrunn</h1>
+          <div class="overview__stars">
+            <i class="fa-solid fa-star overview__icon overview__icon--star"></i>
+            <i class="fa-solid fa-star overview__icon overview__icon--star"></i>
+            <i class="fa-solid fa-star overview__icon overview__icon--star"></i>
+            <i class="fa-solid fa-star overview__icon overview__icon--star"></i>
+            <i class="fa-solid fa-star overview__icon overview__icon--star"></i>
+          </div>
+          <div class="overview__location">
+            <i class="fa-solid fa-location-dot overview__icon overview__icon--location"></i>
+            <button class="btn-inline">Beachburg, USA</button>
+          </div>
+          <div class="overview__rating">
+            <div class="overview__rating-average">8.6</div>
+            <div class="overview__rating-count">429 votes</div>
+          </div>
+        </div>
+
+        <!-- Detail -->
+        <div class="detail">
+
+          <!-- Description -->
+          <div class="description">
+            <p class="paragraph">
+              Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Cras mattis consectetur purus sit amet fermentum. Praesent commodo cursus magna, vel scelerisque nisl.
+            </p>
+            <p class="paragraph">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ornare sem lacinia quam venenatis vestibulum. Nullam id dolor id nibh ultricies vehicula ut id elit. Integer posuere erat a ante venenatis dapibus.
+            </p>
+
+            <ul class="list">
+              <li class="list__item"><i class="fa-solid fa-check list__icon"></i>Close to the beach</li>
+              <li class="list__item"><i class="fa-solid fa-check list__icon"></i>Breakfast included</li>
+              <li class="list__item"><i class="fa-solid fa-check list__icon"></i>Free airport shuttle</li>
+              <li class="list__item"><i class="fa-solid fa-check list__icon"></i>Free wifi</li>
+              <li class="list__item"><i class="fa-solid fa-check list__icon"></i>Air conditioning</li>
+              <li class="list__item"><i class="fa-solid fa-check list__icon"></i>Pets allowed</li>
+            </ul>
+
+            <div class="recommend">
+              <p class="recommend__count">Lucy and 3 other friends recommend this hotel.</p>
+              <div class="recommend__friends">
+                <img src="https://i.pravatar.cc/40?img=1" alt="friend" class="recommend__photo"/>
+                <img src="https://i.pravatar.cc/40?img=5" alt="friend" class="recommend__photo"/>
+                <img src="https://i.pravatar.cc/40?img=9" alt="friend" class="recommend__photo"/>
+                <img src="https://i.pravatar.cc/40?img=12" alt="friend" class="recommend__photo"/>
+              </div>
+            </div>
+          </div>
+
+          <!-- User Reviews -->
+          <div class="user-reviews">
+
+            <figure class="review">
+              <blockquote class="review__text">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, recusandae. Nostrum impedit libero, deleniti quasi fuga molestiae.
+              </blockquote>
+              <figcaption class="review__user">
+                <img src="https://i.pravatar.cc/40?img=3" alt="User" class="review__photo"/>
+                <div class="review__user-box">
+                  <p class="review__user-name">Nick Smith</p>
+                  <p class="review__user-date">Feb 23, 2024</p>
+                </div>
+                <div class="review__rating">7.8</div>
+              </figcaption>
+            </figure>
+
+            <figure class="review">
+              <blockquote class="review__text">
+                Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh ut fermentum. Praesent commodo cursus magna, vel scelerisque nisl consectetur.
+              </blockquote>
+              <figcaption class="review__user">
+                <img src="https://i.pravatar.cc/40?img=20" alt="User" class="review__photo"/>
+                <div class="review__user-box">
+                  <p class="review__user-name">Mary Thomas</p>
+                  <p class="review__user-date">Mar 12, 2024</p>
+                </div>
+                <div class="review__rating">9.3</div>
+              </figcaption>
+            </figure>
+
+            <button class="btn-inline">Show all <span>&rarr;</span></button>
+
+          </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="cta">
+          <h2 class="cta__book-now">Good news! We still have 4 free rooms for your dates!</h2>
+          <button class="btn">
+            <span class="btn__visible">Book now</span>
+            <span class="btn__invisible">Only 4 rooms left!</span>
+          </button>
+        </div>
+
+      </div><!-- /hotel-view -->
+    </main>
+
+  </div><!-- /container -->
+
+</body>
+</html>
