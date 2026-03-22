@@ -8,6 +8,7 @@ app.use(cors());
 app.use(express.static(path.join(__dirname)));
 const port = 4000;
 let user_id = 0;
+let organization_id = 0;
 const Secrate_key = "jitchangdar@#4352323my-app/zetllle#$"
 const userinfo = [];
 const organization = [];
@@ -100,7 +101,9 @@ app.post("/add-create-create-org", (req, res) => {
 
         const user_id = verify_id.user_id;
 
-        organization.push({ user_id, org_name, decription });
+        organization_id++;
+
+        organization.push({ user_id, organization_id, org_name, decription });
 
     }
     catch (err) {

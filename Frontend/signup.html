@@ -4,22 +4,258 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Trello – Sign Up</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Charlie+Display:wght@400;700&family=Inter:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-    />
-    <link rel="stylesheet" href="/css/signup.css" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet" />
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+      :root {
+        --blue: #0052cc;
+        --blue-hover: #0747a6;
+        --bg: #f4f5f7;
+        --white: #ffffff;
+        --text: #172b4d;
+        --muted: #6b778c;
+        --border: #dfe1e6;
+        --input-bg: #fafbfc;
+        --radius: 4px;
+        --error: #de350b;
+      }
+
+      body {
+        font-family: 'DM Sans', sans-serif;
+        background: var(--bg);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        color: var(--text);
+      }
+
+      /* ── Header ── */
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 32px;
+        background: var(--blue);
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+      }
+
+      .logo__icon {
+        display: flex;
+        align-items: flex-end;
+        gap: 3px;
+        height: 24px;
+      }
+
+      .logo__bar {
+        display: block;
+        width: 8px;
+        background: #fff;
+        border-radius: 2px;
+      }
+      .logo__bar--tall { height: 24px; }
+      .logo__bar--short { height: 16px; }
+
+      .logo__name {
+        font-family: 'DM Serif Display', serif;
+        font-size: 22px;
+        color: #fff;
+        letter-spacing: 0.3px;
+      }
+
+      .header__nav { display: flex; gap: 12px; align-items: center; }
+
+      .header__btn {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        padding: 8px 16px;
+        border-radius: var(--radius);
+        text-decoration: none;
+        transition: background 0.15s, color 0.15s;
+      }
+
+      .header__btn--ghost {
+        color: #fff;
+        background: transparent;
+        border: 1px solid rgba(255,255,255,0.5);
+      }
+      .header__btn--ghost:hover { background: rgba(255,255,255,0.12); }
+
+      .header__btn--white {
+        color: var(--blue);
+        background: #fff;
+        border: 1px solid #fff;
+      }
+      .header__btn--white:hover { background: #e9f0ff; }
+
+      /* ── Main ── */
+      main {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+      }
+
+      /* ── Card ── */
+      .card {
+        background: var(--white);
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(9,30,66,0.12), 0 0 1px rgba(9,30,66,0.12);
+        width: 100%;
+        max-width: 400px;
+        padding: 28px 36px 24px;
+      }
+
+      .card__title {
+        font-family: 'DM Serif Display', serif;
+        font-size: 20px;
+        font-weight: 400;
+        color: var(--text);
+        text-align: center;
+        margin-bottom: 18px;
+        line-height: 1.35;
+      }
+
+      /* ── Form ── */
+      .form__group { margin-bottom: 12px; }
+
+      .form__label {
+        display: block;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 6px;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+      }
+
+      .form__input {
+        width: 100%;
+        height: 40px;
+        padding: 0 12px;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 14px;
+        color: var(--text);
+        background: var(--input-bg);
+        border: 2px solid var(--border);
+        border-radius: var(--radius);
+        outline: none;
+        transition: border-color 0.15s, background 0.15s;
+      }
+
+      .form__input::placeholder { color: #a5adba; }
+
+      .form__input:focus {
+        border-color: var(--blue);
+        background: #fff;
+      }
+
+      .form__input.error { border-color: var(--error); }
+
+      .error-msg {
+        margin-top: 6px;
+        font-size: 12px;
+        color: var(--error);
+        display: none;
+      }
+
+      .error-msg.visible { display: block; }
+
+      /* ── Submit ── */
+      .btn-submit {
+        width: 100%;
+        height: 40px;
+        margin-top: 4px;
+        background: var(--blue);
+        color: #fff;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        border: none;
+        border-radius: var(--radius);
+        cursor: pointer;
+        transition: background 0.15s, transform 0.1s;
+        letter-spacing: 0.01em;
+      }
+
+      .btn-submit:hover { background: var(--blue-hover); }
+      .btn-submit:active { transform: scale(0.99); }
+
+      /* ── Terms ── */
+      .terms {
+        margin-top: 12px;
+        font-size: 12px;
+        color: var(--muted);
+        text-align: center;
+        line-height: 1.5;
+      }
+
+      .terms a {
+        color: var(--blue);
+        text-decoration: none;
+      }
+      .terms a:hover { text-decoration: underline; }
+
+      /* ── Switch ── */
+      .switch {
+        margin-top: 14px;
+        padding-top: 14px;
+        border-top: 1px solid var(--border);
+        text-align: center;
+      }
+
+      .switch__text {
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      .switch__link {
+        color: var(--blue);
+        text-decoration: none;
+        font-weight: 500;
+      }
+      .switch__link:hover { text-decoration: underline; }
+
+      /* ── Footer ── */
+      footer {
+        padding: 12px;
+        text-align: center;
+      }
+
+      .footer__links {
+        list-style: none;
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+      }
+
+      .footer__links a {
+        font-size: 12px;
+        color: var(--muted);
+        text-decoration: none;
+      }
+      .footer__links a:hover { text-decoration: underline; }
+
+      /* ── Responsive ── */
+      @media (max-width: 480px) {
+        header { padding: 14px 20px; }
+        .card { padding: 28px 24px 24px; }
+        .header__btn--white { display: none; }
+      }
+    </style>
   </head>
   <body>
-    <!-- Background -->
-    <div class="bg"></div>
 
-    <!-- Header -->
-    <header class="header">
+    <header>
       <a href="#" class="logo">
         <div class="logo__icon">
           <span class="logo__bar logo__bar--tall"></span>
@@ -29,136 +265,46 @@
       </a>
       <div class="header__nav">
         <a href="#" class="header__btn header__btn--ghost">Log in</a>
-        <a href="#" class="header__btn header__btn--white"
-          >Get Trello for free</a
-        >
+        <a href="#" class="header__btn header__btn--white">Get Trello for free</a>
       </div>
     </header>
 
-    <!-- Main -->
-    <main class="main">
-      <!-- Mini boards illustration -->
-      <div class="boards">
-        <div class="board">
-          <div class="board__col">
-            <div class="board__card board__card--lg"></div>
-            <div class="board__card board__card--md"></div>
-            <div class="board__card board__card--sm"></div>
-            <div class="board__card board__card--lg"></div>
-          </div>
-          <div class="board__col">
-            <div class="board__card board__card--md"></div>
-            <div class="board__card board__card--lg"></div>
-            <div class="board__card board__card--sm"></div>
-          </div>
-          <div class="board__col">
-            <div class="board__card board__card--sm"></div>
-            <div class="board__card board__card--lg"></div>
-            <div class="board__card board__card--md"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Card -->
+    <main>
       <div class="card">
         <h1 class="card__title">Sign up to continue to Trello</h1>
 
-        <!-- Social buttons -->
-        <a href="#" class="social-btn">
-          <i
-            class="fa-brands fa-google social-btn__icon social-btn__icon--google"
-          ></i>
-          <span>Continue with Google</span>
-        </a>
-
-        <a href="#" class="social-btn">
-          <i
-            class="fa-brands fa-microsoft social-btn__icon social-btn__icon--ms"
-          ></i>
-          <span>Continue with Microsoft</span>
-        </a>
-
-        <a href="#" class="social-btn">
-          <i
-            class="fa-brands fa-apple social-btn__icon social-btn__icon--apple"
-          ></i>
-          <span>Continue with Apple</span>
-        </a>
-
-        <a href="#" class="social-btn">
-          <i
-            class="fa-brands fa-slack social-btn__icon social-btn__icon--slack"
-          ></i>
-          <span>Continue with Slack</span>
-        </a>
-
-        <!-- Divider -->
-        <div class="divider"><span>or</span></div>
-
-        <!-- Form -->
-
         <div class="form__group">
-          <label class="form__label" for="name">Your name</label>
-          <input
-            type="text"
-            id="user_name"
-            name="name"
-            class="form__input"
-            placeholder="Enter your name"
-            required
-          />
+          <label class="form__label" for="user_name">Your Name</label>
+          <input type="text" id="user_name" name="name" class="form__input" placeholder="Enter your name" required />
         </div>
 
         <div class="form__group">
           <label class="form__label" for="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            class="form__input"
-            placeholder="Enter your email"
-            required
-          />
-
-          <div id="error_message"></div>
+          <input type="email" id="email" name="email" class="form__input" placeholder="Enter your email" required />
+          <div id="error_message" class="error-msg"></div>
         </div>
 
         <div class="form__group">
           <label class="form__label" for="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            class="form__input"
-            placeholder="Create a password"
-            required
-          />
+          <input type="password" id="password" name="password" class="form__input" placeholder="Create a password" required />
         </div>
 
-        <button type="submit" class="btn-submit" onclick="signup()">
-          Sign up
-        </button>
+        <button class="btn-submit" onclick="signup()">Sign up</button>
 
-        <!-- Terms -->
         <p class="terms">
           By signing up, you confirm that you've read and accepted our
-          <a href="#" class="terms__link">Terms of Service</a> and
-          <a href="#" class="terms__link">Privacy Policy</a>.
+          <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
         </p>
 
-        <!-- Switch -->
         <div class="switch">
-          <hr class="switch__line" />
           <p class="switch__text">
             Already have an account? <a href="#" class="switch__link">Log in</a>
           </p>
         </div>
       </div>
-      <!-- /card -->
     </main>
 
-    <!-- Footer -->
-    <footer class="footer">
+    <footer>
       <ul class="footer__links">
         <li><a href="#">Privacy Policy</a></li>
         <li><a href="#">Terms of Service</a></li>
@@ -168,41 +314,43 @@
 
     <script>
       async function signup() {
-        const username = document.getElementById("user_name").value;
-        const email = document.getElementById("email").value;
+        const username = document.getElementById("user_name").value.trim();
+        const email = document.getElementById("email").value.trim();
         const password = document.getElementById("password").value;
+        const emailInput = document.getElementById("email");
+        const errorMsg = document.getElementById("error_message");
+
+        // Reset error
+        errorMsg.textContent = "";
+        errorMsg.classList.remove("visible");
+        emailInput.classList.remove("error");
 
         if (!isValidEmail(email)) {
-          const error_message = document.getElementById("error_message");
-          error_message.innerHTML = "please cehck your email";
+          errorMsg.textContent = "Please enter a valid email address.";
+          errorMsg.classList.add("visible");
+          emailInput.classList.add("error");
+          emailInput.focus();
           return;
         }
 
-        const send_post_data = await fetch(
-          "http://localhost:4000/signup_post",
-          {
+        try {
+          const res = await fetch("http://localhost:4000/signup_post", {
             method: "POST",
-            headers: {
-              "content-type": "application/json",
-            },
-            body: JSON.stringify({
-              username: username,
-              password: password,
-              email: email,
-            }),
-          },
-        );
-        const res_token = await send_post_data.json();
-
-        if (send_post_data.ok && res_token.token) {
-          localStorage.setItem("username", res_token.token);
-          window.location.href = "/organization-create";
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password, email }),
+          });
+          const data = await res.json();
+          if (res.ok && data.token) {
+            localStorage.setItem("username", data.token);
+            window.location.href = "/organization-create";
+          }
+        } catch (err) {
+          console.error(err);
         }
       }
 
       function isValidEmail(email) {
-        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return regex.test(email);
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
       }
     </script>
   </body>
