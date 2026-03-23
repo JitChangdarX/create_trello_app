@@ -1,473 +1,725 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Trello – Add Members</title>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --blue: #0052cc;
-      --blue-hover: #0747a6;
-      --bg: #f4f5f7;
-      --white: #ffffff;
-      --text: #172b4d;
-      --muted: #6b778c;
-      --border: #dfe1e6;
-      --input-bg: #fafbfc;
-      --radius: 4px;
-      --success: #006644;
-      --success-bg: #e3fcef;
-      --tag-bg: #e9f0ff;
-      --tag-text: #0052cc;
-    }
-
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--bg);
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      color: var(--text);
-    }
-
-    /* ── Header ── */
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 14px 32px;
-      background: var(--blue);
-      flex-shrink: 0;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      text-decoration: none;
-    }
-
-    .logo__icon {
-      display: flex;
-      align-items: flex-end;
-      gap: 3px;
-      height: 22px;
-    }
-
-    .logo__bar {
-      display: block;
-      width: 7px;
-      background: #fff;
-      border-radius: 2px;
-    }
-    .logo__bar--tall { height: 22px; }
-    .logo__bar--short { height: 14px; }
-
-    .logo__name {
-      font-family: 'DM Serif Display', serif;
-      font-size: 21px;
-      color: #fff;
-    }
-
-    .header__nav { display: flex; gap: 10px; }
-
-    .header__btn {
-      font-family: 'DM Sans', sans-serif;
-      font-size: 13px;
-      font-weight: 500;
-      padding: 7px 14px;
-      border-radius: var(--radius);
-      text-decoration: none;
-      transition: background 0.15s;
-    }
-
-    .header__btn--ghost {
-      color: #fff;
-      background: transparent;
-      border: 1px solid rgba(255,255,255,0.45);
-    }
-    .header__btn--ghost:hover { background: rgba(255,255,255,0.12); }
-
-    /* ── Main ── */
-    main {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-      overflow: hidden;
-    }
-
-    /* ── Card ── */
-    .card {
-      background: var(--white);
-      border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(9,30,66,0.13), 0 0 1px rgba(9,30,66,0.1);
-      width: 100%;
-      max-width: 420px;
-      padding: 32px 36px 28px;
-    }
-
-    /* Step indicator */
-    .steps {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      margin-bottom: 22px;
-    }
-
-    .step {
-      width: 28px;
-      height: 4px;
-      border-radius: 99px;
-      background: var(--border);
-    }
-    .step.active { background: var(--blue); }
-    .step.done { background: #4c9aff; }
-
-    .card__icon {
-      width: 48px;
-      height: 48px;
-      background: var(--tag-bg);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 14px;
-    }
-
-    .card__icon svg {
-      width: 22px;
-      height: 22px;
-      fill: var(--blue);
-    }
-
-    .card__title {
-      font-family: 'DM Serif Display', serif;
-      font-size: 21px;
-      font-weight: 400;
-      color: var(--text);
-      text-align: center;
-      margin-bottom: 6px;
-    }
-
-    .card__sub {
-      font-size: 13px;
-      color: var(--muted);
-      text-align: center;
-      margin-bottom: 22px;
-      line-height: 1.5;
-    }
-
-    /* ── Tag input area ── */
-    .input-wrap {
-      border: 2px solid var(--border);
-      border-radius: var(--radius);
-      background: var(--input-bg);
-      padding: 8px 10px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      align-items: center;
-      min-height: 44px;
-      cursor: text;
-      transition: border-color 0.15s;
-      margin-bottom: 14px;
-    }
-
-    .input-wrap:focus-within { border-color: var(--blue); background: #fff; }
-
-    .tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      background: var(--tag-bg);
-      color: var(--tag-text);
-      font-size: 12px;
-      font-weight: 500;
-      padding: 3px 8px 3px 10px;
-      border-radius: 99px;
-    }
-
-    .tag__remove {
-      cursor: pointer;
-      font-size: 14px;
-      line-height: 1;
-      color: #4c9aff;
-      border: none;
-      background: none;
-      padding: 0;
-      display: flex;
-      align-items: center;
-    }
-    .tag__remove:hover { color: var(--blue-hover); }
-
-    .tag-input {
-      border: none;
-      outline: none;
-      background: transparent;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 14px;
-      color: var(--text);
-      flex: 1;
-      min-width: 140px;
-    }
-
-    .tag-input::placeholder { color: #a5adba; }
-
-    /* ── Invite button ── */
-    .btn-invite {
-      width: 100%;
-      height: 40px;
-      background: var(--blue);
-      color: #fff;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 14px;
-      font-weight: 600;
-      border: none;
-      border-radius: var(--radius);
-      cursor: pointer;
-      transition: background 0.15s, transform 0.1s;
-      letter-spacing: 0.01em;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    .btn-invite:hover { background: var(--blue-hover); }
-    .btn-invite:active { transform: scale(0.99); }
-    .btn-invite:disabled { background: #b3c7e6; cursor: not-allowed; transform: none; }
-
-    .btn-invite svg {
-      width: 16px;
-      height: 16px;
-      fill: none;
-      stroke: #fff;
-      stroke-width: 2.2;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-
-    /* ── Success toast ── */
-    .toast {
-      display: none;
-      align-items: center;
-      gap: 8px;
-      background: var(--success-bg);
-      color: var(--success);
-      font-size: 13px;
-      font-weight: 500;
-      padding: 10px 14px;
-      border-radius: var(--radius);
-      margin-top: 12px;
-    }
-
-    .toast.show { display: flex; }
-
-    .toast svg {
-      width: 16px;
-      height: 16px;
-      flex-shrink: 0;
-      fill: none;
-      stroke: var(--success);
-      stroke-width: 2.2;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-
-    /* ── Skip link ── */
-    .skip {
-      display: block;
-      text-align: center;
-      margin-top: 16px;
-      font-size: 13px;
-      color: var(--muted);
-      text-decoration: none;
-      transition: color 0.15s;
-    }
-    .skip:hover { color: var(--blue); }
-
-    /* ── Footer ── */
-    footer {
-      padding: 10px;
-      text-align: center;
-      flex-shrink: 0;
-    }
-
-    .footer__links {
-      list-style: none;
-      display: flex;
-      justify-content: center;
-      gap: 18px;
-    }
-
-    .footer__links a {
-      font-size: 11px;
-      color: var(--muted);
-      text-decoration: none;
-    }
-    .footer__links a:hover { text-decoration: underline; }
-  </style>
-</head>
-<body>
-
-  <header>
-    <a href="#" class="logo">
-      <div class="logo__icon">
-        <span class="logo__bar logo__bar--tall"></span>
-        <span class="logo__bar logo__bar--short"></span>
-      </div>
-      <span class="logo__name">Trello</span>
-    </a>
-    <div class="header__nav">
-      <a href="#" class="header__btn header__btn--ghost">Log in</a>
-    </div>
-  </header>
-
-  <main>
-    <div class="card">
-
-      <!-- Step dots -->
-      <div class="steps">
-        <div class="step done"></div>
-        <div class="step done"></div>
-        <div class="step active"></div>
-      </div>
-
-      <!-- Icon -->
-      <div class="card__icon">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-          <circle cx="9" cy="7" r="4"/>
-          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-        </svg>
-      </div>
-
-      <h1 class="card__title">Add team members</h1>
-      <p class="card__sub">Invite people to collaborate on your boards.<br/>Enter their email addresses below.</p>
-
-      <!-- Tag email input -->
-      <div class="input-wrap" id="inputWrap" onclick="document.getElementById('emailInput').focus()">
-        <input
-          type="text"
-          id="emailInput"
-          class="tag-input"
-          placeholder="Enter email and press Enter or comma"
-        />
-      </div>
-
-      <button class="btn-invite" id="inviteBtn" onclick="sendInvites()">
-        <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-        Send Invites
-      </button>
-
-      <div class="toast" id="toast">
-        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-        <span id="toastMsg">Invites sent successfully!</span>
-      </div>
-
-      <a href="#" class="skip">Skip for now →</a>
-
-    </div>
-  </main>
-
-  <footer>
-    <ul class="footer__links">
-      <li><a href="#">Privacy Policy</a></li>
-      <li><a href="#">Terms of Service</a></li>
-      <li><a href="#">Copyright © 2024 Atlassian</a></li>
-    </ul>
-  </footer>
-
-  <script>
-    const tags = [];
-    const input = document.getElementById('emailInput');
-    const wrap = document.getElementById('inputWrap');
-
-    input.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ',') {
-        e.preventDefault();
-        addTag(input.value);
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trello – Add Members</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Serif+Display&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/axios@1.13.2/dist/axios.min.js"></script>
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
       }
-      if (e.key === 'Backspace' && input.value === '' && tags.length) {
-        removeTag(tags.length - 1);
+
+      :root {
+        --blue: #0052cc;
+        --blue-hover: #0747a6;
+        --bg: #f4f5f7;
+        --white: #ffffff;
+        --text: #172b4d;
+        --muted: #6b778c;
+        --border: #dfe1e6;
+        --input-bg: #fafbfc;
+        --radius: 4px;
+        --success: #006644;
+        --success-bg: #e3fcef;
+        --tag-bg: #e9f0ff;
+        --tag-text: #0052cc;
       }
-    });
 
-    input.addEventListener('blur', () => {
-      if (input.value.trim()) addTag(input.value);
-    });
-
-    function isValidEmail(email) {
-      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    }
-
-    function addTag(val) {
-      const email = val.trim().replace(/,/g, '');
-      if (!email) return;
-      if (!isValidEmail(email)) {
-        input.value = '';
-        input.placeholder = 'Invalid email — try again';
-        setTimeout(() => input.placeholder = 'Enter email and press Enter or comma', 1800);
-        return;
+      body {
+        font-family: "DM Sans", sans-serif;
+        background: var(--bg);
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        color: var(--text);
       }
-      if (tags.includes(email)) { input.value = ''; return; }
-      tags.push(email);
-      renderTags();
-      input.value = '';
-    }
 
-    function removeTag(index) {
-      tags.splice(index, 1);
-      renderTags();
-    }
+      /* ── Header ── */
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 32px;
+        background: var(--blue);
+        flex-shrink: 0;
+      }
 
-    function renderTags() {
-      // Remove existing tags
-      wrap.querySelectorAll('.tag').forEach(t => t.remove());
-      tags.forEach((email, i) => {
-        const tag = document.createElement('span');
-        tag.className = 'tag';
-        tag.innerHTML = `${email}<button class="tag__remove" onclick="removeTag(${i})">×</button>`;
-        wrap.insertBefore(tag, input);
-      });
-      document.getElementById('inviteBtn').disabled = tags.length === 0;
-    }
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+      }
 
-    async function sendInvites() {
-      if (!tags.length) return;
-      const btn = document.getElementById('inviteBtn');
-      btn.disabled = true;
-      btn.innerHTML = `<svg viewBox="0 0 24 24" style="animation:spin 0.7s linear infinite"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg> Sending...`;
+      .logo__icon {
+        display: flex;
+        align-items: flex-end;
+        gap: 3px;
+        height: 22px;
+      }
 
-      // Simulate API call
-      await new Promise(r => setTimeout(r, 1200));
+      .logo__bar {
+        display: block;
+        width: 7px;
+        background: #fff;
+        border-radius: 2px;
+      }
+      .logo__bar--tall {
+        height: 22px;
+      }
+      .logo__bar--short {
+        height: 14px;
+      }
 
-      const count = tags.length;
-      tags.length = 0;
-      renderTags();
-      btn.innerHTML = `<svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Send Invites`;
-      btn.disabled = true;
+      .logo__name {
+        font-family: "DM Serif Display", serif;
+        font-size: 21px;
+        color: #fff;
+      }
 
-      const toast = document.getElementById('toast');
-      document.getElementById('toastMsg').textContent = `${count} invite${count > 1 ? 's' : ''} sent successfully!`;
-      toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 3000);
-    }
+      .header__nav {
+        display: flex;
+        gap: 10px;
+      }
 
-    // Init disabled state
-    document.getElementById('inviteBtn').disabled = true;
-  </script>
+      .header__btn {
+        font-family: "DM Sans", sans-serif;
+        font-size: 13px;
+        font-weight: 500;
+        padding: 7px 14px;
+        border-radius: var(--radius);
+        text-decoration: none;
+        transition: background 0.15s;
+      }
 
-  <style>
-    @keyframes spin { to { transform: rotate(360deg); } }
-  </style>
-</body>
+      .header__btn--ghost {
+        color: #fff;
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.45);
+      }
+      .header__btn--ghost:hover {
+        background: rgba(255, 255, 255, 0.12);
+      }
+
+      /* ── Main ── */
+      main {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        overflow: hidden;
+      }
+
+      /* ── Card ── */
+      .card {
+        background: var(--white);
+        border-radius: 8px;
+        box-shadow:
+          0 2px 10px rgba(9, 30, 66, 0.13),
+          0 0 1px rgba(9, 30, 66, 0.1);
+        width: 100%;
+        max-width: 420px;
+        padding: 32px 36px 28px;
+      }
+
+      /* Step indicator */
+      .steps {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        margin-bottom: 22px;
+      }
+
+      .step {
+        width: 28px;
+        height: 4px;
+        border-radius: 99px;
+        background: var(--border);
+      }
+      .step.active {
+        background: var(--blue);
+      }
+      .step.done {
+        background: #4c9aff;
+      }
+
+      .card__icon {
+        width: 48px;
+        height: 48px;
+        background: var(--tag-bg);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 14px;
+      }
+
+      .card__icon svg {
+        width: 22px;
+        height: 22px;
+        fill: var(--blue);
+      }
+
+      .card__title {
+        font-family: "DM Serif Display", serif;
+        font-size: 21px;
+        font-weight: 400;
+        color: var(--text);
+        text-align: center;
+        margin-bottom: 6px;
+      }
+
+      .card__sub {
+        font-size: 13px;
+        color: var(--muted);
+        text-align: center;
+        margin-bottom: 22px;
+        line-height: 1.5;
+      }
+
+      /* ── Organisation Dropdown ── */
+      .field-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 6px;
+        display: block;
+        letter-spacing: 0.02em;
+      }
+
+      .dropdown-wrap {
+        position: relative;
+        margin-bottom: 14px;
+      }
+
+      .dropdown-trigger {
+        width: 100%;
+        height: 40px;
+        background: var(--input-bg);
+        border: 2px solid var(--border);
+        border-radius: var(--radius);
+        padding: 0 36px 0 12px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 14px;
+        color: var(--text);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition:
+          border-color 0.15s,
+          background 0.15s;
+        user-select: none;
+        text-align: left;
+        outline: none;
+        appearance: none;
+        -webkit-appearance: none;
+      }
+
+      .dropdown-trigger:hover,
+      .dropdown-trigger:focus {
+        border-color: var(--blue);
+        background: #fff;
+      }
+
+      .dropdown-trigger.open {
+        border-color: var(--blue);
+        background: #fff;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+
+      /* org avatar inside trigger */
+      .org-avatar {
+        width: 22px;
+        height: 22px;
+        border-radius: 4px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 700;
+        color: #fff;
+        letter-spacing: 0;
+      }
+
+      .trigger-text {
+        flex: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .trigger-placeholder {
+        color: #a5adba;
+      }
+
+      /* chevron */
+      .chevron {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+        transition: transform 0.2s ease;
+      }
+
+      .chevron svg {
+        width: 16px;
+        height: 16px;
+        stroke: var(--muted);
+        fill: none;
+        stroke-width: 2.2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        display: block;
+      }
+
+      .dropdown-trigger.open ~ .chevron {
+        transform: translateY(-50%) rotate(180deg);
+      }
+
+      /* dropdown list */
+      .dropdown-list {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: #fff;
+        border: 2px solid var(--blue);
+        border-top: none;
+        border-bottom-left-radius: var(--radius);
+        border-bottom-right-radius: var(--radius);
+        box-shadow: 0 6px 16px rgba(9, 30, 66, 0.14);
+        z-index: 100;
+        overflow: hidden;
+        max-height: 0;
+        opacity: 0;
+        transition:
+          max-height 0.22s ease,
+          opacity 0.18s ease;
+      }
+
+      .dropdown-list.open {
+        max-height: 220px;
+        opacity: 1;
+      }
+
+      /* search inside dropdown */
+      .dropdown-search-wrap {
+        padding: 8px 10px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .dropdown-search {
+        width: 100%;
+        height: 32px;
+        background: var(--input-bg);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 0 10px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 13px;
+        color: var(--text);
+        outline: none;
+        transition: border-color 0.15s;
+      }
+
+      .dropdown-search:focus {
+        border-color: var(--blue);
+      }
+      .dropdown-search::placeholder {
+        color: #a5adba;
+      }
+
+      /* org items */
+      .dropdown-items {
+        overflow-y: auto;
+        max-height: 158px;
+      }
+
+      .org-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 9px 12px;
+        cursor: pointer;
+        transition: background 0.12s;
+      }
+
+      .org-item:hover {
+        background: var(--bg);
+      }
+
+      .org-item.selected {
+        background: var(--tag-bg);
+      }
+
+      .org-item__info {
+        flex: 1;
+        overflow: hidden;
+      }
+
+      .org-item__name {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .org-item__members {
+        font-size: 11px;
+        color: var(--muted);
+        margin-top: 1px;
+      }
+
+      .org-item__check {
+        width: 16px;
+        height: 16px;
+        flex-shrink: 0;
+        stroke: var(--blue);
+        fill: none;
+        stroke-width: 2.5;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        opacity: 0;
+      }
+
+      .org-item.selected .org-item__check {
+        opacity: 1;
+      }
+
+      .org-empty {
+        padding: 14px 12px;
+        font-size: 13px;
+        color: var(--muted);
+        text-align: center;
+      }
+
+      /* ── Tag input area ── */
+      .input-wrap {
+        border: 2px solid var(--border);
+        border-radius: var(--radius);
+        background: var(--input-bg);
+        padding: 8px 10px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        align-items: center;
+        min-height: 44px;
+        cursor: text;
+        transition: border-color 0.15s;
+        margin-bottom: 14px;
+      }
+
+      .input-wrap:focus-within {
+        border-color: var(--blue);
+        background: #fff;
+      }
+
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background: var(--tag-bg);
+        color: var(--tag-text);
+        font-size: 12px;
+        font-weight: 500;
+        padding: 3px 8px 3px 10px;
+        border-radius: 99px;
+      }
+
+      .tag__remove {
+        cursor: pointer;
+        font-size: 14px;
+        line-height: 1;
+        color: #4c9aff;
+        border: none;
+        background: none;
+        padding: 0;
+        display: flex;
+        align-items: center;
+      }
+      .tag__remove:hover {
+        color: var(--blue-hover);
+      }
+
+      .tag-input {
+        border: none;
+        outline: none;
+        background: transparent;
+        font-family: "DM Sans", sans-serif;
+        font-size: 14px;
+        color: var(--text);
+        flex: 1;
+        min-width: 140px;
+      }
+
+      .tag-input::placeholder {
+        color: #a5adba;
+      }
+
+      /* ── Invite button ── */
+      .btn-invite {
+        width: 100%;
+        height: 40px;
+        background: var(--blue);
+        color: #fff;
+        font-family: "DM Sans", sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        border: none;
+        border-radius: var(--radius);
+        cursor: pointer;
+        transition:
+          background 0.15s,
+          transform 0.1s;
+        letter-spacing: 0.01em;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+
+      .btn-invite:hover {
+        background: var(--blue-hover);
+      }
+      .btn-invite:active {
+        transform: scale(0.99);
+      }
+      .btn-invite:disabled {
+        background: #b3c7e6;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .btn-invite svg {
+        width: 16px;
+        height: 16px;
+        fill: none;
+        stroke: #fff;
+        stroke-width: 2.2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      /* ── Success toast ── */
+      .toast {
+        display: none;
+        align-items: center;
+        gap: 8px;
+        background: var(--success-bg);
+        color: var(--success);
+        font-size: 13px;
+        font-weight: 500;
+        padding: 10px 14px;
+        border-radius: var(--radius);
+        margin-top: 12px;
+      }
+
+      .toast.show {
+        display: flex;
+      }
+
+      .toast svg {
+        width: 16px;
+        height: 16px;
+        flex-shrink: 0;
+        fill: none;
+        stroke: var(--success);
+        stroke-width: 2.2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      /* ── Skip link ── */
+      .skip {
+        display: block;
+        text-align: center;
+        margin-top: 16px;
+        font-size: 13px;
+        color: var(--muted);
+        text-decoration: none;
+        transition: color 0.15s;
+      }
+      .skip:hover {
+        color: var(--blue);
+      }
+
+      /* ── Footer ── */
+      footer {
+        padding: 10px;
+        text-align: center;
+        flex-shrink: 0;
+      }
+
+      .footer__links {
+        list-style: none;
+        display: flex;
+        justify-content: center;
+        gap: 18px;
+      }
+
+      .footer__links a {
+        font-size: 11px;
+        color: var(--muted);
+        text-decoration: none;
+      }
+      .footer__links a:hover {
+        text-decoration: underline;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <a href="#" class="logo">
+        <div class="logo__icon">
+          <span class="logo__bar logo__bar--tall"></span>
+          <span class="logo__bar logo__bar--short"></span>
+        </div>
+        <span class="logo__name">Trello</span>
+      </a>
+      <div class="header__nav">
+        <a href="#" class="header__btn header__btn--ghost">Log in</a>
+      </div>
+    </header>
+
+    <main>
+      <div class="card">
+        <!-- Step dots -->
+        <div class="steps">
+          <div class="step done"></div>
+          <div class="step done"></div>
+          <div class="step active"></div>
+        </div>
+
+        <!-- Icon -->
+        <div class="card__icon">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+          </svg>
+        </div>
+
+        <h1 class="card__title">Add team members</h1>
+        <p class="card__sub">
+          Invite people to collaborate on your boards.<br />Enter their email
+          addresses below.
+        </p>
+
+        <!-- ── Organisation Dropdown ── -->
+        <label class="field-label" for="orgTrigger">Organisation</label>
+        <div class="dropdown-wrap" id="dropdownWrap">
+          <button
+            class="dropdown-trigger"
+            id="orgTrigger"
+            type="button"
+            onclick="toggleDropdown()"
+          >
+            <span
+              class="org-avatar"
+              id="triggerAvatar"
+              style="display: none"
+            ></span>
+            <span class="trigger-text" id="triggerText">
+              <span class="trigger-placeholder">Select an organisation</span>
+            </span>
+          </button>
+
+          <span class="chevron">
+            <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9" /></svg>
+          </span>
+
+          <div class="dropdown-list" id="dropdownList">
+            <div class="dropdown-search-wrap">
+              <input
+                type="text"
+                class="dropdown-search"
+                id="orgSearch"
+                placeholder="Search organisation…"
+                oninput="filterOrgs(this.value)"
+                onclick="event.stopPropagation()"
+              />
+            </div>
+            <div class="dropdown-items" id="orgItems">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+        </div>
+        <!-- ── END Organisation Dropdown ── -->
+
+        <!-- Tag email input -->
+        <label class="field-label">Email addresses</label>
+        <div
+          class="input-wrap"
+          id="inputWrap"
+          onclick="document.getElementById('emailInput').focus()"
+        >
+          <input
+            type="text"
+            id="emailInput"
+            class="tag-input"
+            placeholder="Enter email and press Enter or comma"
+          />
+        </div>
+
+        <button class="btn-invite" id="inviteBtn" onclick="sendInvites()">
+          <svg viewBox="0 0 24 24">
+            <line x1="22" y1="2" x2="11" y2="13" />
+            <polygon points="22 2 15 22 11 13 2 9 22 2" />
+          </svg>
+          Send Invites
+        </button>
+
+        <div class="toast" id="toast">
+          <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" /></svg>
+          <span id="toastMsg">Invites sent successfully!</span>
+        </div>
+
+        <a href="#" class="skip">Skip for now →</a>
+      </div>
+    </main>
+
+    <footer>
+      <ul class="footer__links">
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms of Service</a></li>
+        <li><a href="#">Copyright © 2024 Atlassian</a></li>
+      </ul>
+    </footer>
+
+    <script>
+      async function get_all_organization() {
+        const token_username = localStorage.getItem("username");
+        const response_organization = await axios.post("/get-all-org", {
+          user_token: token_username,
+        });
+      }
+
+      get_all_organization();
+    </script>
+  </body>
 </html>

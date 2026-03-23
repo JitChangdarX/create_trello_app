@@ -22,6 +22,9 @@ app.get("/signup", (req, res) => {
 app.get("/organization-create", (req, res) => {
     res.sendFile(path.join(__dirname, "Frontend", "organization.html"))
 })
+app.get("/create-member", (req, res) => {
+    res.sendFile(path.join(__dirname, "Frontend", "create-member.html"))
+})
 
 app.get("/board", (req, res) => {
 })
@@ -105,6 +108,11 @@ app.post("/add-create-create-org", (req, res) => {
 
         organization.push({ user_id, organization_id, org_name, decription });
 
+
+        res.json({
+            message: "Organization create successfully"
+        })
+
     }
     catch (err) {
         return res.status(401).json({
@@ -121,7 +129,13 @@ app.post("/signin", (req, res) => {
 })
 
 
+app.post("/get-all-org", (req, res) => {
+   const token_user = req.body.user_token;
 
+   const verify_token = jwt.verify(token_user,Secrate_key);
+
+   console.log(verify_token);
+})
 
 app.post("/add-create-member", (req, res) => {
 
